@@ -54,8 +54,9 @@ from espnet2.asr.decoder.transformer_decoder import (
     DynamicConvolutionTransformerDecoder,
     LightweightConvolution2DTransformerDecoder,
     LightweightConvolutionTransformerDecoder,
-    TransformerDecoder,
+    # TransformerDecoder,
 )
+from src.decoder.transformer.decoder import TransformerDecoder
 from espnet2.asr.decoder.whisper_decoder import OpenAIWhisperDecoder
 
 from src.models.avsr_espnet_model import ESPnetAVSRModel

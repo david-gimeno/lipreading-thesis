@@ -10,7 +10,7 @@ class AVSRDataset(Dataset):
     """Dataset to load different databases for audio- and video-only systems, as well as audio-visual ones.
     """
 
-    def __init__(self, args, dataset_path, is_training=True):
+    def __init__(self, args, dataset_path, filter_spkr_ids=['all-spkrs'], is_training=True):
         """__init__.
 
         Args:
@@ -25,6 +25,11 @@ class AVSRDataset(Dataset):
 
         # -- frame length limitation based on the video length
         self.samples = dataset[dataset['nframes'] <= args.training_settings['nframes']] if is_training else dataset
+
+        # -- filtering targeted speakers for speaker-adapted ASR systems
+        if 'all-spkrs' not in filter_spkr_ids:
+            self.samples['spkrID'] = self.samples.apply(lambda x: x['sampleID'][:-x['delimiter']], axis=1)
+            self.samples = self.samples[self.samples['spkrID'].isin(filter_spkr_ids)]
 
     def __len__(self):
         return len(self.samples)

@@ -28,7 +28,7 @@ from espnet.nets.pytorch_backend.transformer.subsampling import (
 )
 
 from espnet2.asr.encoder.conformer_encoder import ConformerEncoder
-from src.encoder.branchformer.encoder import MyBranchformerEncoder
+from src.encoder.my_branchformer.encoder import MyBranchformerEncoder
 
 from src.audiovisual_fusion.audiovisual_fusion_abs_module import AudioVisualFusionAbsModule
 
@@ -219,7 +219,7 @@ class ConventionalEncoder(AudioVisualAbsEncoder):
     def get_encoder_class(self, encoder_class_type):
         if encoder_class_type == "conformer":
             return ConformerEncoder
-        elif encoder_class_type == "branchformer":
+        elif encoder_class_type == "my_branchformer":
             return MyBranchformerEncoder
         else:
             raise ValueError("unknown encoder_class_type: " + encoder_class_type)

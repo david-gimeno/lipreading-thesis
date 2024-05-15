@@ -26,9 +26,11 @@ from torchvision import transforms
 
 def training(e2e, train_loader, optimizer, scheduler, accum_grad, scaler=None):
     e2e.train()
-    train_loss = 0.0
+    if config.encoder_conf['use_adapters'] or config.decoder_conf['use_adapters']:
+        e2e.apply(set_eval_mode_except_adapters)
 
     # -- training
+    train_loss = 0.0
     optimizer.zero_grad()
     for batch_idx, batch in enumerate(tqdm(train_loader, position=0, leave=True, file=sys.stdout, bar_format="{l_bar}%s{bar:10}%s{r_bar}" % (Fore.GREEN, Fore.RESET))):
         batch = {k: v.to(device=config.device, non_blocking=True) if hasattr(v, 'to') else v for k, v in batch.items()}
@@ -106,6 +108,7 @@ if __name__ == "__main__":
     parser.add_argument("--training-dataset", default="", type=str, help="Path to where the training dataset split is")
     parser.add_argument("--validation-dataset", default="", type=str, help="Path to where the validation dataset split is")
     parser.add_argument("--test-dataset", default="", type=str, help="Path to where the test dataset split is")
+    parser.add_argument("--filter-spkr-ids", nargs='+', default=["all-spkrs"], type=str, help="Choose the speaker's data you want to use")
 
     parser.add_argument("--mode", default="both", type=str, help="Choose: 'training', 'inference' or 'both'")
     parser.add_argument("--mask", default="none", type=str, help="Choose: 'audio', 'video' or 'none'")
@@ -177,15 +180,15 @@ if __name__ == "__main__":
         print(model_summary(e2e))
 
         # -- -- loading the AVSR end-to-end system from a checkpoint
-        load_e2e(e2e, args.load_modules, args.load_checkpoint, config.model_conf["ctc_weight"])
+        load_e2e(e2e, args.load_modules, args.load_checkpoint, config)
 
         # -- -- freezing modules of the AVSR end-to-end system
-        freeze_e2e(e2e, args.freeze_modules, config.model_conf["ctc_weight"])
+        freeze_e2e(e2e, args.freeze_modules, config)
 
         # -- -- creating dataloaders
-        train_loader = get_dataloader(config, dataset_path=args.training_dataset, audio_transforms=train_audio_transforms, video_transforms=train_video_transforms, tokenizer=tokenizer, converter=converter, is_training=True)
-        val_loader = get_dataloader(config, dataset_path=args.validation_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, is_training=False)
-        test_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, is_training=False)
+        train_loader = get_dataloader(config, dataset_path=args.training_dataset, audio_transforms=train_audio_transforms, video_transforms=train_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=True)
+        val_loader = get_dataloader(config, dataset_path=args.validation_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
+        test_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
 
         # -- -- optimizer and scheduler
         optimizer, scheduler = set_optimizer(config, e2e, train_loader)
@@ -224,6 +227,6 @@ if __name__ == "__main__":
         speech2text = build_speech2text(args, config)
 
         # -- -- creating validation & test dataloaders
-        eval_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, is_training=False)
+        eval_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
         inference(args.output_dir, speech2text, eval_loader, args.output_name)
 

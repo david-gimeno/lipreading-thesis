@@ -67,7 +67,7 @@ encoder_conf:
   interctc_use_conditioning: false
   audiovisual_interctc_conditioning: false
   acoustic_encoder_conf:
-    encoder_class_type: "branchformer"
+    encoder_class_type: "my_branchformer"
     attention_heads: 4
     linear_units: 2048
     num_blocks: 12
@@ -88,7 +88,7 @@ encoder_conf:
     use_cgmlp: true
     macaron: true
   visual_encoder_conf:
-    encoder_class_type: "branchformer"
+    encoder_class_type: "my_branchformer"
     attention_heads: 4
     linear_units: 2048
     num_blocks: 12

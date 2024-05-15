@@ -7,7 +7,8 @@ import torch
 from typeguard import check_argument_types, check_return_type
 
 from src.frontend.conv3d_resnet18.conv3d_resnet18  import Conv3dResNet18
-from src.encoder.branchformer.encoder import MyBranchformerEncoder
+from src.encoder.ma_conformer.encoder import MaConformerEncoder
+from src.encoder.my_branchformer.encoder import MyBranchformerEncoder
 
 from src.ctc.ctc import CTC
 from espnet2.asr.decoder.abs_decoder import AbsDecoder
@@ -23,8 +24,11 @@ from espnet2.asr.decoder.transformer_decoder import (
     DynamicConvolutionTransformerDecoder,
     LightweightConvolution2DTransformerDecoder,
     LightweightConvolutionTransformerDecoder,
-    TransformerDecoder,
+    # TransformerDecoder,
 )
+
+from src.decoder.transformer.decoder import TransformerDecoder
+
 from espnet2.asr.decoder.whisper_decoder import OpenAIWhisperDecoder
 from espnet2.asr.encoder.abs_encoder import AbsEncoder
 from espnet2.asr.encoder.branchformer_encoder import BranchformerEncoder
@@ -146,6 +150,7 @@ encoder_choices = ClassChoices(
     "encoder",
     classes=dict(
         conformer=ConformerEncoder,
+        ma_conformer=MaConformerEncoder,
         transformer=TransformerEncoder,
         transformer_multispkr=TransformerEncoderMultiSpkr,
         contextual_block_transformer=ContextualBlockTransformerEncoder,
@@ -158,8 +163,9 @@ encoder_choices = ClassChoices(
         torchaudiohubert=TorchAudioHuBERTPretrainEncoder,
         longformer=LongformerEncoder,
         whisper=OpenAIWhisperEncoder,
+        branchformer=BranchformerEncoder,
         e_branchformer=EBranchformerEncoder,
-        branchformer=MyBranchformerEncoder,
+        my_branchformer=MyBranchformerEncoder,
     ),
     type_check=AbsEncoder,
     default="branchformer",

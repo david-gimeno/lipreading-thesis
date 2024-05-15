@@ -47,7 +47,7 @@ from espnet.nets.pytorch_backend.transformer.positionwise_feed_forward import (
 )
 from espnet.nets.pytorch_backend.nets_utils import rename_state_dict
 
-from src.encoder.branchformer.encoder_layer import MyBranchformerEncoderLayer
+from src.encoder.my_branchformer.encoder_layer import MyBranchformerEncoderLayer
 
 class MyBranchformerEncoder(AbsEncoder):
     """Branchformer Encoder module.

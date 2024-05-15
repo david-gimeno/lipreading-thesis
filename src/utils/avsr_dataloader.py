@@ -4,12 +4,13 @@ import torch.nn as nn
 import torch.utils.data as data
 from src.datasets import AVSRDataset
 
-def get_dataloader(config, dataset_path, audio_transforms, video_transforms, tokenizer, converter, is_training=True):
+def get_dataloader(config, dataset_path, audio_transforms, video_transforms, tokenizer, converter, filter_spkr_ids=['all-spkrs'], is_training=True):
 
     # -- defining dataset
     dataset = AVSRDataset(
         config,
         dataset_path=dataset_path,
+        filter_spkr_ids=filter_spkr_ids,
         is_training=is_training,
     )
 

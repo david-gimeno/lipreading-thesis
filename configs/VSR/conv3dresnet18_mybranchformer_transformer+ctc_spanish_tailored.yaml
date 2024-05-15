@@ -18,7 +18,7 @@ frontend_conf:
 specaug:
 
 # encoder related
-encoder: branchformer
+encoder: my_branchformer
 encoder_conf:
   output_size: 256
   attention_heads: 4
@@ -36,7 +36,8 @@ encoder_conf:
   attention_layer_type: "rel_selfattn"
   positionwise_layer_type: "linear"
   ffn_activation_type: "swish"
-  merge_method: "learned_ave"
+  cgmlp_weight: [0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+  merge_method: "fixed_ave"
   use_attn: true
   use_cgmlp: true
   macaron: true
@@ -94,17 +95,13 @@ token_list: "./src/tokenizers/char/spanish.txt"
 # training related
 training_settings:
   nframes: 500
-  optimizer: "adam"
-  scheduler: "noam"
+  optimizer: "adamw"
+  scheduler: "onecycle"
   batch_size: 4
-  warmup_steps: 10000
-  learning_rate: 0.001
-  noam_factor: 1.6
-  grad_clip: -1.0
+  learning_rate: 0.0005
   accum_grad: 16
-  epochs: 100
-  average_epochs: 10
+  grad_clip: -1.0
+  epochs: 10
+  average_epochs: 1
   use_amp: false
-  dtype: "float32"
-  device: "cuda:0"
   num_workers: 8

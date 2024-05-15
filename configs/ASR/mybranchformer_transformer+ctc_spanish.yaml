@@ -1,24 +1,43 @@
-task: vsr
+task: asr
 dtype: "float32"
 device: "cuda:0"
 
 init:
-input_size:
 aux_ctc:
+input_size:
 
 # normalize related
-normalize:
+normalize: utterance_mvn
+normalize_conf:
+  norm_means: true
+  norm_vars: false
 
 # frontend related
-frontend: conv3dresnet18
+frontend: default
 frontend_conf:
-  activation_type: "swish"
+  n_fft: 512
+  win_length: 400
+  hop_length: 160
 
 # spec augment related
-specaug:
+specaug: specaug
+specaug_conf:
+  apply_time_warp: true
+  time_warp_window: 5
+  time_warp_mode: bicubic
+  apply_freq_mask: true
+  freq_mask_width_range:
+  - 0
+  - 27
+  num_freq_mask: 2
+  apply_time_mask: true
+  time_mask_width_ratio_range:
+  - 0.
+  - 0.05
+  num_time_mask: 5
 
 # encoder related
-encoder: branchformer
+encoder: my_branchformer
 encoder_conf:
   output_size: 256
   attention_heads: 4
@@ -30,7 +49,7 @@ encoder_conf:
   positional_dropout_rate: 0.1
   attention_dropout_rate: 0.1
   attn_branch_drop_rate: 0.0
-  input_layer: "linear"
+  input_layer: "conv2d"
   rel_pos_type: "latest"
   pos_enc_layer_type: "rel_pos"
   attention_layer_type: "rel_selfattn"
@@ -68,6 +87,7 @@ model_conf:
   length_normalized_loss: false
   report_cer: true
   report_wer: false
+  # sym_space: "▁"
   sym_space: "<space>"
   sym_blank: "<blank>"
   sym_sos: "<sos/eos>"
@@ -80,28 +100,28 @@ inference_conf:
   maxlenratio: 0.0
   minlenratio: 0.0
   batch_size: 1
-  beam_size: 40
+  beam_size: 30
   ctc_weight: 0.1
-  lm_weight: 0.6
-  penalty: 0.5
+  lm_weight: 0.4
+  penalty: 0.0
   nbest: 1
 
 # token related
 token_type: char
 bpemodel:
-token_list: "./src/tokenizers/char/english.txt"
+token_list: "./src/tokenizers/char/spanish.txt"
 
 # training related
 training_settings:
   nframes: 500
   optimizer: "adam"
   scheduler: "noam"
-  batch_size: 4
+  batch_size: 16
   warmup_steps: 10000
   learning_rate: 0.001
   noam_factor: 1.6
+  accum_grad: 4
   grad_clip: -1.0
-  accum_grad: 16
   epochs: 100
   average_epochs: 10
   use_amp: false

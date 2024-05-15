@@ -3,6 +3,8 @@ import torch
 import pandas as pd
 from collections import OrderedDict
 
+from src.adapters.bapna_adapter import Adapter
+
 def load_frontend_lrw(e2e, checkpoint, module_name):
     frontend_lrw = OrderedDict()
     for key in checkpoint.keys():
@@ -15,7 +17,7 @@ def load_frontend_lrw(e2e, checkpoint, module_name):
     elif module_name == "visual_frontend":
         e2e.visual_frontend.load_state_dict(frontend_lrw)
 
-def load_module(e2e, module, checkpoint, ctc_weight):
+def load_module(e2e, module, checkpoint, config):
     # -- creating the module's checkpoint
     module_checkpoint = OrderedDict()
     for key in checkpoint.keys():
@@ -31,20 +33,20 @@ def load_module(e2e, module, checkpoint, ctc_weight):
         e2e.encoder.load_state_dict(module_checkpoint)
 
     if module == "decoder":
-        if ctc_weight < 1.0:
+        if config.model_conf['ctc_weight'] < 1.0:
             e2e.decoder.load_state_dict(module_checkpoint)
         else:
             raise RuntimeError("The end-to-end model does not have an Attention-based decoding branch!")
 
     if module == "ctc":
-        if ctc_weight > 0.0:
+        if config.model_conf['ctc_weight'] > 0.0:
             e2e.ctc.load_state_dict(module_checkpoint)
         else:
             raise RuntimeError("The end-to-end model does not have a CTC-based decoding branch!")
 
 def load_e2e(e2e, modules, checkpoint_path, ctc_weight):
     if checkpoint_path != "":
-        checkpoint = torch.load(checkpoint_path)
+        checkpoint = torch.load(checkpoint_path, map_location=torch.device('cpu'))
         if "entire-e2e" not in modules:
             for module in modules:
                 if ("LRW" in checkpoint_path):
@@ -92,7 +94,11 @@ def set_bn_eval(module):
     if isinstance(module, torch.nn.modules.batchnorm._BatchNorm):
         module.eval()
 
-def freeze_e2e(e2e, modules, mtlalpha):
+def set_eval_mode_except_adapters(module):
+    if not isinstance(module, Adapter):
+        module.eval()
+
+def freeze_e2e(e2e, modules, config):
     if "no-frozen" not in modules:
         for module in modules:
             if module == "frontend":
@@ -104,21 +110,27 @@ def freeze_e2e(e2e, modules, mtlalpha):
                     param.requires_grad = False
                 print("The Encoder is frozen!!")
             elif module == "decoder":
-                if mtlalpha < 1.0:
+                if ctc_weight < 1.0:
                     for param in e2e.decoder.parameters():
                         param.requires_grad = False
                     print("The Attention-based Decoder is frozen!!")
                 else:
                     raise RuntimeError("The end-to-end model does not have a Attention-based decoding branch!")
             elif module == "ctc":
-                if mtlalpha > 0.0:
+                if config.model_conf['ctc_weight'] > 0.0:
                     for param in e2e.ctc.parameters():
                         param.requieres_grad = False
                     print("The CTC-based Decoder is frozen!!")
                 else:
                     raise RuntimeError("The end-to-end model does not have a CTC-based decoding branch!")
     else:
-        print("The entire E2E system will be trained")
+        if config.encoder_conf['use_adapters'] or config.decoder_conf['use_adapters']:
+            print("Freezing every layer in the model except for the injected adapter layers")
+            for name, param in e2e.named_parameters():
+                if "adapter" not in name: # and ("ctc" not in name):
+                    param.requires_grad = False
+        else:
+            print("The entire E2E system will be trained")
 
 def save_model(output_dir, model, suffix):
     dst_root = output_dir + "/models/"
