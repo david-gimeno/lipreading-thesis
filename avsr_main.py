@@ -152,6 +152,10 @@ if __name__ == "__main__":
     ])
 
     # -- video preprocessing
+    """When using models from LRE journal paper.
+    VLRF --> 50 fps, (0.392, 0.142) # and removing frame sampling from dataset
+    LIP-RTVE --> 25 fps (0.491, 0.166)
+    """
     fps = 25
     (mean, std) = (0.421, 0.165)
 
