@@ -1,0 +1,64 @@
+steps/nnet2/train_pnorm_fast.sh --stage -10 --samples-per-iter 200000 --parallel-opts --gpu 1 --num-threads 1 --minibatch-size 256 --num-jobs-nnet 8 --mix-up 8000 --initial-learning-rate 0.04 --final-learning-rate 0.004 --num-hidden-layers 2 --pnorm-input-dim 2000 --pnorm-output-dim 400 --cmd run.pl ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train ../../data/LIP-RTVE/lang/ ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/ ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400
+steps/nnet2/train_pnorm_fast.sh: calling get_lda.sh
+steps/nnet2/get_lda.sh --transform-dir ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/ --splice-width 4 --cmd run.pl ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train ../../data/LIP-RTVE/lang/ ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/ ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400
+steps/nnet2/get_lda.sh: feature type is lda
+steps/nnet2/get_lda.sh: using transforms from ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/
+feat-to-dim 'ark,s,cs:utils/subset_scp.pl --quiet 1000 ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/feats.scp | apply-cmvn  --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/cmvn.scp scp:- ark:- | splice-feats --left-context=3 --right-context=3 ark:- ark:- | transform-feats ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/final.mat ark:- ark:- | transform-feats --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk ark:../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali//trans.1 ark:- ark:- |' - 
+transform-feats --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk ark:../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali//trans.1 ark:- ark:- 
+transform-feats ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/final.mat ark:- ark:- 
+splice-feats --left-context=3 --right-context=3 ark:- ark:- 
+apply-cmvn --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/cmvn.scp scp:- ark:- 
+WARNING (feat-to-dim[5.5.1038~1-9af2c]:Close():kaldi-io.cc:515) Pipe utils/subset_scp.pl --quiet 1000 ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/feats.scp | apply-cmvn  --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/cmvn.scp scp:- ark:- | splice-feats --left-context=3 --right-context=3 ark:- ark:- | transform-feats ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/final.mat ark:- ark:- | transform-feats --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk ark:../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali//trans.1 ark:- ark:- | had nonzero return status 36096
+feat-to-dim 'ark,s,cs:utils/subset_scp.pl --quiet 1000 ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/feats.scp | apply-cmvn  --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/cmvn.scp scp:- ark:- | splice-feats --left-context=3 --right-context=3 ark:- ark:- | transform-feats ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/final.mat ark:- ark:- | transform-feats --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk ark:../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali//trans.1 ark:- ark:- | splice-feats --left-context=4 --right-context=4 ark:- ark:- |' - 
+splice-feats --left-context=3 --right-context=3 ark:- ark:- 
+transform-feats ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/final.mat ark:- ark:- 
+transform-feats --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk ark:../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali//trans.1 ark:- ark:- 
+splice-feats --left-context=4 --right-context=4 ark:- ark:- 
+apply-cmvn --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/cmvn.scp scp:- ark:- 
+WARNING (feat-to-dim[5.5.1038~1-9af2c]:Close():kaldi-io.cc:515) Pipe utils/subset_scp.pl --quiet 1000 ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/feats.scp | apply-cmvn  --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/cmvn.scp scp:- ark:- | splice-feats --left-context=3 --right-context=3 ark:- ark:- | transform-feats ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/final.mat ark:- ark:- | transform-feats --utt2spk=ark:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/split10/1/utt2spk ark:../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali//trans.1 ark:- ark:- | splice-feats --left-context=4 --right-context=4 ark:- ark:- | had nonzero return status 36096
+steps/nnet2/get_lda.sh: Accumulating LDA statistics.
+steps/nnet2/get_lda.sh: Finished estimating LDA
+steps/nnet2/train_pnorm_fast.sh: calling get_egs.sh
+steps/nnet2/get_egs.sh --transform-dir ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/ --splice-width 4 --samples-per-iter 200000 --num-jobs-nnet 8 --stage 0 --cmd run.pl --io-opts --max-jobs-run 15 ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train ../../data/LIP-RTVE/lang/ ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/ ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400
+steps/nnet2/get_egs.sh: feature type is lda
+steps/nnet2/get_egs.sh: using transforms from ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-independent/resnet/tri3b_ali/
+steps/nnet2/get_egs.sh: working out number of frames of training data
+utils/data/get_utt2dur.sh: wave file does not exist so getting durations from feats files
+feat-to-len scp:../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/feats.scp ark,t:- 
+utils/data/get_utt2dur.sh: computed ../../data/LIP-RTVE/100fps/speaker-independent/resnet//train/utt2dur
+steps/nnet2/get_egs.sh: Every epoch, splitting the data up into 2 iterations,
+steps/nnet2/get_egs.sh: giving samples-per-iteration of 207042 (you requested 200000).
+Getting validation and training subset examples.
+steps/nnet2/get_egs.sh: extracting validation and training-subset alignments.
+copy-int-vector ark:- ark,t:- 
+LOG (copy-int-vector[5.5.1038~1-9af2c]:main():copy-int-vector.cc:83) Copied 7072 vectors of int32.
+Getting subsets of validation examples for diagnostics and combination.
+Creating training examples
+Generating training examples on disk
+steps/nnet2/get_egs.sh: rearranging examples into parts for different parallel jobs
+Shuffling the order of training examples
+(in order to avoid stressing the disk, these won't all run at once).
+steps/nnet2/get_egs.sh: Finished preparing training examples
+steps/nnet2/train_pnorm_fast.sh: initializing neural net
+Training transition probabilities and setting priors
+prepare vector assignment for FixedScaleComponent before softmax
+(use priors^-0.25 and rescale to average 1)
+insert an additional layer of FixedScaleComponent before softmax
+nnet-am-info ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/0.mdl 
+LOG (nnet-am-info[5.5.1038~1-9af2c]:main():nnet-am-info.cc:76) Printed info about ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/0.mdl
+nnet-init ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/per_element.config - 
+LOG (nnet-init[5.5.1038~1-9af2c]:main():nnet-init.cc:69) Initialized raw neural net and wrote it to -
+nnet-insert --insert-at=6 --randomize-next-component=false ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/0.mdl - ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/0.mdl 
+LOG (nnet-insert[5.5.1038~1-9af2c]:main():nnet-insert.cc:106) Inserted 1 components at position 6
+LOG (nnet-insert[5.5.1038~1-9af2c]:main():nnet-insert.cc:132) Write neural-net acoustic model to ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/0.mdl
+steps/nnet2/train_pnorm_fast.sh: Will train for 15 + 5 epochs, equalling 
+steps/nnet2/train_pnorm_fast.sh: 30 + 10 = 40 iterations, 
+steps/nnet2/train_pnorm_fast.sh: (while reducing learning rate) + (with constant learning rate).
+steps/nnet2/train_pnorm_fast.sh: Will not do mix up
+Training neural net (pass 0)
+Training neural net (pass 1)
+nnet-am-info ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/1.mdl 
+LOG (nnet-am-info[5.5.1038~1-9af2c]:main():nnet-am-info.cc:76) Printed info about ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/1.mdl
+Training neural net (pass 2)
+Training neural net (pass 3)
+run.pl: 1 / 8 failed, log is in ./exp/LIP-RTVE/100fps/speaker-independent/resnet/nnet2_hl2_dim2000-400/log/train.3.*.log

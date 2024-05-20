@@ -1,0 +1,188 @@
+#!/usr/bin/perl
+
+$cooc = 0;
+if ($#ARGV>=0) {
+#    print "ARGUMENTS @ARGV\n";
+    while ($arg = shift @ARGV) {
+        if ($arg eq "-h") {
+	    print "Usage: eutranscribe [file|-|<file] [-w] [-h]\n";
+            print "  file  contains the sentences\n";
+            print "  -     represents the standard input\n";
+            print "  <file reads file though the standard input\n";
+	    print "  -w    word by word transcription\n";
+	    print "  -h    shows this help message\n";
+	    print "Units set: .ptkbdgmnhfzsxyclr\@ieaou\n";
+            print "          (/ll/ and /y/ are unified; /./ is a silence)\n";
+	    exit;
+	}
+	$cooc = 1 if ($arg eq "-w");
+	if ($arg ne "-w" && $arg ne "-h" && $arg ne "-") {
+	    open(STDIN,$arg)
+	}
+    }
+}
+
+while(<>) {
+# PREPROCESO
+
+# Eliminar acentos
+    tr/áéíóúÁÉÍÓÚ/aeiouaeiou/;
+    s/'[nN]/\~/g;            # Antes de eliminar acentos, 
+                             #  codificacion ñ como: 'n, 'N (~)
+    s/\\?'\{?\\?(.)\}?/$1/g; # En plan LaTeX!
+    tr/ÄÅÕÆÇ/aeiou/;         # Acentos hproman
+
+# Mantener internamente las dieresis
+    s/\\?"\{?[uU]\}?/ü/g;
+    
+# Las N a principio de frase son n, pero en otro lugar son ñ (~)
+# Otras codificaciones de ñ: ~n, ~, 'n, 'N, ñ, Ñ, · (~) 
+#    s/'[nN]/\~/g;  (antes de eliminar acentos)
+    s/^N|(([.?!¿¡])\s*)N/$1n/g;
+    s/N/\~/g;
+    s/\\?\~\{?n\}?/\~/g;
+    s/[ñÑ]/\~/g;
+    tr/·/\~/;                 # Codificacion hproman
+
+# La doble 'r' es una vibrante multiple '@'
+    s/@//g;
+    s/rr/@/g;
+
+# Pasar de mayusculas a minusculas
+    tr/A-Z/a-z/;
+
+# Los signos de puntuacion iniciales se suprimen
+    s/[¿¡]|'\?|'\!//g;
+
+# Los signos de puntuacion finales y otras pausas son pausas (.)
+    s/(\.\.\.)|[\?\!,\.;:]/\./g;
+
+# Eliminar otros simbolos especiales
+    s/[\(\)\{\}\[\]&%\$"'\\\-\_\+\<\>\/\*\#]//g;
+
+# Las pausas son palabras
+    s/^/\./g;
+    s/\n/\.\n/g;
+    s/\.\./\./g;
+    s/\.[ ]*\./\./g;
+    s/\./ \. /g;
+
+# Fundir cadenas de blancos
+    s/[ \t]+/ /g;
+
+
+# QUILIS
+
+# En posicion intervocalica se pronuncia como 'ks' (Q79:8.6.1)
+    s/([aeiou])x([aeiou])/$1ks$2/g;
+# En cualquier otro caso, como 's'
+    s/x/s/g;
+
+# Al aparecer al final de palabra se realiza como 'i' (Q79:6.2)
+# Tambien como conjuncion se pronuncia como 'i'
+    s/y /i /g;
+# Entre consonantes o tras consonante al final de palabras se suele leer i
+# (anglicismos como 'curry')
+    s/([^aeiou])y([^aeiou])/$1i$2/g;
+
+
+# La grafia 'hi' en posicion inicial de palabra se pronuncia 'y' (Q79:8.8)
+    s/ hi([aeiou])/ y$1/g;
+
+# Cuando la 'g' aparece como 'ge' o 'gi' se pronuncia como la letra jota ('x')
+# (Q79:7.6.2,Q79:8.9.1)
+    s/g([ei])/x$1/g;
+
+# La grafia 'qu' se pronuncia como 'k' (Q79:7.6.1)
+    s/qu(e|i)/k$1/g;
+# y los grupos 'gue,gui' no pronuncian la 'u'...
+    s/gu(e|i)/g$1/g;
+# ...excepto si hay dieresis
+    s/ü/u/g;
+# si en el diptongo 'ue' la 'u' es el primer fonema prenuclear de la silaba,
+# aparece siempre delante el sonido 'g' (Q79:8.9.2)
+    s/[ h]u(e)/gu$1/g;
+
+# La 'c' delante de 'e' e 'i' se pronuncia 'z' (Q79:8.5.1)
+    s/c([e,i])/z$1/g;
+# La 'c'cuando no es 'ch', es una 'k'(Q79:7.6.1)
+    s/c([^h])/k$1/g;
+# La 'ch' es representada foneticamente por 'c' (Q79:9.3)
+    s/ch/c/g;
+
+# La 'h' en castellano es muda. Su aparicion en otros contexto (huevo, che)
+# es tratada en otras reglas anteriores
+    s/h//g;
+
+# La 'j' siempre se pronuncia como el fonema 'x' (Q79:8.9.1)
+    s/j/x/g;
+
+# Cuando es doble se pronuncia como el fonema 'H' (Q79:11.2.2)
+# ATROS: Se transcribe como "y" 
+    s/ll/y/g;
+
+# Antes de 'b' o 'v' se pronuncia 'm' (Q79:7.3.2)
+    s/n( ?[bv])/m$1/g;
+
+# Si concurren dos nasales lingualveolares, se pronuncia solo una (Q79:13.4.2)
+    s/n ?n/n/g;
+
+# La 'ñ' (internamente es '~') siempre se pronuncia como el 
+# fonema 'h' (Q79:10.6)
+    s/\~/h/g;
+
+# La particula 'ps' a principio de palabra se pronuncia 's'
+    s/ ps/ s/g;
+
+# A principio de palabra, la 'r' se pronuncia como si fuera doble ('@')
+# Tras 'n', 'l' o 's', tambien se pronuncia como 'r' doble (Q79:11.3.3)
+# (Q79:11.3.3)
+    s/([ nls])r/$1@/g;
+
+# En castellano la 'v' se pronuncia siempre como 'b' (Q79:7.3.2)
+    s/v/b/g;
+
+# La 'w' se pronuncia como 'gu'
+    s/w/gu/g;
+
+# Concurrencia de vocales en una misma palabra
+    s/aa/a/g;
+    s/ee/e/g;
+    s/ii/i/g;
+    s/oo/o/g;
+    s/uu/u/g;
+
+if (!$cooc) {
+  # CONCURRENCIAS (Debe ser opcional!)
+
+  # Si concurren dos laterales linguoalveolares, solo se pronuncia una lateral
+  # (Q79:13.4.2)
+      s/l l/l/g;
+
+  # Si concurre la 'd' con otra linguodental, se pronuncia solo una (Q79:13.4.2)
+      s/d d/d/g;
+
+  # Si concurre una 'r' con una vibrante multiple, se pronuncia solo esta ultima
+  # (Q79:13.4.2)
+      s/r @/@/g;
+
+  # Si concurren dos fricativas linguoalveolares sordas, se pronuncia solo una
+  # (Q79:13.4.2)
+      s/s s/s/g;
+
+      s/a a/a/g;
+      s/e e/e/g;
+      s/i i/i/g;
+      s/o o/o/g;
+      s/u u/u/g;
+  # Fuera blancos
+      s/ //g;
+      s/^\.//g;
+      s/\.$//g;
+} else {
+    s/^ \. //g;
+    s/ \. ?$//g;
+}
+
+    print;
+}

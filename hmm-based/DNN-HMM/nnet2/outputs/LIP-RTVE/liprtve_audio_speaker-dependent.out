@@ -1,0 +1,759 @@
+steps/nnet2/train_pnorm_fast.sh --stage -10 --samples-per-iter 200000 --parallel-opts --gpu 1 --num-threads 1 --minibatch-size 256 --num-jobs-nnet 8 --mix-up 8000 --initial-learning-rate 0.04 --final-learning-rate 0.004 --num-hidden-layers 2 --pnorm-input-dim 2000 --pnorm-output-dim 400 --cmd run.pl ../../data/LIP-RTVE/100fps/speaker-dependent/audio//train ../../data/LIP-RTVE/lang/ ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/ ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400
+steps/nnet2/train_pnorm_fast.sh: calling get_lda.sh
+steps/nnet2/get_lda.sh --transform-dir ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/ --splice-width 4 --cmd run.pl ../../data/LIP-RTVE/100fps/speaker-dependent/audio//train ../../data/LIP-RTVE/lang/ ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/ ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400
+steps/nnet2/get_lda.sh: feature type is lda
+steps/nnet2/get_lda.sh: using transforms from ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/
+steps/nnet2/get_lda.sh: Accumulating LDA statistics.
+steps/nnet2/get_lda.sh: Finished estimating LDA
+steps/nnet2/train_pnorm_fast.sh: calling get_egs.sh
+steps/nnet2/get_egs.sh --transform-dir ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/ --splice-width 4 --samples-per-iter 200000 --num-jobs-nnet 8 --stage 0 --cmd run.pl --io-opts --max-jobs-run 15 ../../data/LIP-RTVE/100fps/speaker-dependent/audio//train ../../data/LIP-RTVE/lang/ ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/ ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400
+steps/nnet2/get_egs.sh: feature type is lda
+steps/nnet2/get_egs.sh: using transforms from ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b_ali/
+steps/nnet2/get_egs.sh: working out number of frames of training data
+steps/nnet2/get_egs.sh: Every epoch, splitting the data up into 2 iterations,
+steps/nnet2/get_egs.sh: giving samples-per-iteration of 202068 (you requested 200000).
+Getting validation and training subset examples.
+steps/nnet2/get_egs.sh: extracting validation and training-subset alignments.
+Getting subsets of validation examples for diagnostics and combination.
+Creating training examples
+Generating training examples on disk
+steps/nnet2/get_egs.sh: rearranging examples into parts for different parallel jobs
+Shuffling the order of training examples
+(in order to avoid stressing the disk, these won't all run at once).
+steps/nnet2/get_egs.sh: Finished preparing training examples
+steps/nnet2/train_pnorm_fast.sh: initializing neural net
+Training transition probabilities and setting priors
+prepare vector assignment for FixedScaleComponent before softmax
+(use priors^-0.25 and rescale to average 1)
+insert an additional layer of FixedScaleComponent before softmax
+steps/nnet2/train_pnorm_fast.sh: Will train for 15 + 5 epochs, equalling 
+steps/nnet2/train_pnorm_fast.sh: 30 + 10 = 40 iterations, 
+steps/nnet2/train_pnorm_fast.sh: (while reducing learning rate) + (with constant learning rate).
+steps/nnet2/train_pnorm_fast.sh: Will not do mix up
+Training neural net (pass 0)
+Training neural net (pass 1)
+Training neural net (pass 2)
+Training neural net (pass 3)
+Training neural net (pass 4)
+Training neural net (pass 5)
+Training neural net (pass 6)
+Training neural net (pass 7)
+Training neural net (pass 8)
+Training neural net (pass 9)
+Training neural net (pass 10)
+Training neural net (pass 11)
+Training neural net (pass 12)
+Training neural net (pass 13)
+Training neural net (pass 14)
+Training neural net (pass 15)
+Training neural net (pass 16)
+Training neural net (pass 17)
+Training neural net (pass 18)
+Training neural net (pass 19)
+Training neural net (pass 20)
+Training neural net (pass 21)
+Training neural net (pass 22)
+Warning: the mix up opertion is disabled!
+    Ignore mix up leaves number specified
+Training neural net (pass 23)
+Training neural net (pass 24)
+Training neural net (pass 25)
+Training neural net (pass 26)
+Training neural net (pass 27)
+Training neural net (pass 28)
+Training neural net (pass 29)
+Training neural net (pass 30)
+Training neural net (pass 31)
+Training neural net (pass 32)
+Training neural net (pass 33)
+Training neural net (pass 34)
+Training neural net (pass 35)
+Training neural net (pass 36)
+Training neural net (pass 37)
+Training neural net (pass 38)
+Training neural net (pass 39)
+Setting num_iters_final=10
+Doing final combination to produce final.mdl
+Getting average posterior for purposes of adjusting the priors.
+Re-adjusting priors based on computed posteriors
+Done
+Cleaning up data
+steps/nnet2/remove_egs.sh: Finished deleting examples in ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/egs
+steps/nnet2/decode.sh --cmd run.pl --nj 10 --config ./conf/decode.config --transform-dir ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b/decode_test ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b/graph ../../data/LIP-RTVE/100fps/speaker-dependent/audio//test ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test
+steps/nnet2/decode.sh: feature type is lda
+steps/nnet2/decode.sh: using transforms from ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b/decode_test
+steps/diagnostic/analyze_lats.sh --cmd run.pl --iter final ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b/graph ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test
+analyze_phone_length_stats.py: WARNING: optional-silence sil is seen only 64.85714285714286% of the time at utterance end.  This may not be optimal.
+steps/diagnostic/analyze_lats.sh: see stats in ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/log/analyze_alignments.log
+Overall, lattice depth (10,50,90-percentile)=(1,1,4) and mean=2.1
+steps/diagnostic/analyze_lats.sh: see stats in ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/log/analyze_lattice_depth_stats.log
+score best paths
+local/score.sh --iter final --min-lmwt 1 --max-lmwt 20 --beam 13 --word-ins-penalty -5.0,-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0,5.0 --cmd run.pl ../../data/LIP-RTVE/100fps/speaker-dependent/audio//test ../../GMM-HMM/exp/LIP-RTVE/100fps/speaker-dependent/audio/tri3b/graph ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test
+local/score.sh: scoring with word insertion penalty=-5.0,-4.0,-3.0,-2.0,-1.0,0.0,1.0,2.0,3.0,4.0,5.0
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_-1.0
+%WER 7.67 [ 1631 / 21259, 531 ins, 240 del, 860 sub ]
+%SER 52.14 [ 730 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_-2.0
+%WER 8.25 [ 1754 / 21259, 665 ins, 189 del, 900 sub ]
+%SER 53.21 [ 745 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_-3.0
+%WER 9.01 [ 1916 / 21259, 821 ins, 149 del, 946 sub ]
+%SER 55.07 [ 771 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_-4.0
+%WER 10.01 [ 2128 / 21259, 1015 ins, 120 del, 993 sub ]
+%SER 57.71 [ 808 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_-5.0
+%WER 11.24 [ 2390 / 21259, 1242 ins, 95 del, 1053 sub ]
+%SER 61.21 [ 857 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_0.0
+%WER 7.47 [ 1589 / 21259, 423 ins, 303 del, 863 sub ]
+%SER 52.14 [ 730 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_1.0
+%WER 7.59 [ 1613 / 21259, 343 ins, 398 del, 872 sub ]
+%SER 52.64 [ 737 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_2.0
+%WER 7.79 [ 1656 / 21259, 287 ins, 486 del, 883 sub ]
+%SER 52.86 [ 740 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_3.0
+%WER 8.27 [ 1759 / 21259, 243 ins, 599 del, 917 sub ]
+%SER 53.36 [ 747 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_4.0
+%WER 8.84 [ 1880 / 21259, 212 ins, 713 del, 955 sub ]
+%SER 55.79 [ 781 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_10_5.0
+%WER 9.56 [ 2032 / 21259, 186 ins, 850 del, 996 sub ]
+%SER 57.57 [ 806 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_-1.0
+%WER 7.55 [ 1605 / 21259, 500 ins, 247 del, 858 sub ]
+%SER 51.86 [ 726 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_-2.0
+%WER 8.13 [ 1729 / 21259, 642 ins, 196 del, 891 sub ]
+%SER 53.00 [ 742 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_-3.0
+%WER 8.97 [ 1907 / 21259, 819 ins, 145 del, 943 sub ]
+%SER 54.86 [ 768 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_-4.0
+%WER 9.95 [ 2116 / 21259, 1009 ins, 119 del, 988 sub ]
+%SER 57.86 [ 810 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_-5.0
+%WER 11.33 [ 2409 / 21259, 1257 ins, 94 del, 1058 sub ]
+%SER 61.50 [ 861 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_0.0
+%WER 7.42 [ 1578 / 21259, 398 ins, 311 del, 869 sub ]
+%SER 52.14 [ 730 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_1.0
+%WER 7.51 [ 1596 / 21259, 316 ins, 407 del, 873 sub ]
+%SER 52.50 [ 735 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_2.0
+%WER 7.80 [ 1658 / 21259, 263 ins, 510 del, 885 sub ]
+%SER 52.86 [ 740 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_3.0
+%WER 8.34 [ 1774 / 21259, 228 ins, 635 del, 911 sub ]
+%SER 53.86 [ 754 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_4.0
+%WER 8.92 [ 1896 / 21259, 184 ins, 763 del, 949 sub ]
+%SER 56.36 [ 789 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_11_5.0
+%WER 9.77 [ 2078 / 21259, 156 ins, 918 del, 1004 sub ]
+%SER 58.50 [ 819 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_-1.0
+%WER 7.47 [ 1587 / 21259, 475 ins, 250 del, 862 sub ]
+%SER 51.43 [ 720 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_-2.0
+%WER 8.02 [ 1704 / 21259, 623 ins, 195 del, 886 sub ]
+%SER 52.50 [ 735 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_-3.0
+%WER 9.01 [ 1915 / 21259, 824 ins, 147 del, 944 sub ]
+%SER 55.21 [ 773 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_-4.0
+%WER 9.96 [ 2118 / 21259, 1015 ins, 120 del, 983 sub ]
+%SER 57.36 [ 803 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_-5.0
+%WER 11.51 [ 2446 / 21259, 1294 ins, 94 del, 1058 sub ]
+%SER 62.29 [ 872 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_0.0
+%WER 7.33 [ 1558 / 21259, 378 ins, 319 del, 861 sub ]
+%SER 51.86 [ 726 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_1.0
+%WER 7.47 [ 1589 / 21259, 295 ins, 428 del, 866 sub ]
+%SER 51.93 [ 727 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_2.0
+%WER 7.84 [ 1666 / 21259, 243 ins, 543 del, 880 sub ]
+%SER 52.79 [ 739 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_3.0
+%WER 8.36 [ 1778 / 21259, 199 ins, 676 del, 903 sub ]
+%SER 54.57 [ 764 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_4.0
+%WER 9.14 [ 1943 / 21259, 164 ins, 819 del, 960 sub ]
+%SER 57.29 [ 802 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_12_5.0
+%WER 10.00 [ 2125 / 21259, 139 ins, 980 del, 1006 sub ]
+%SER 59.21 [ 829 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_-1.0
+%WER 7.42 [ 1578 / 21259, 456 ins, 252 del, 870 sub ]
+%SER 51.50 [ 721 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_-2.0
+%WER 7.94 [ 1687 / 21259, 603 ins, 196 del, 888 sub ]
+%SER 52.79 [ 739 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_-3.0
+%WER 8.96 [ 1905 / 21259, 811 ins, 149 del, 945 sub ]
+%SER 54.93 [ 769 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_-4.0
+%WER 10.15 [ 2158 / 21259, 1039 ins, 118 del, 1001 sub ]
+%SER 57.79 [ 809 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_-5.0
+%WER 11.61 [ 2469 / 21259, 1315 ins, 93 del, 1061 sub ]
+%SER 62.86 [ 880 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_0.0
+%WER 7.27 [ 1545 / 21259, 343 ins, 335 del, 867 sub ]
+%SER 51.86 [ 726 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_1.0
+%WER 7.51 [ 1596 / 21259, 278 ins, 448 del, 870 sub ]
+%SER 52.36 [ 733 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_2.0
+%WER 7.83 [ 1664 / 21259, 217 ins, 565 del, 882 sub ]
+%SER 53.07 [ 743 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_3.0
+%WER 8.43 [ 1792 / 21259, 178 ins, 713 del, 901 sub ]
+%SER 55.00 [ 770 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_4.0
+%WER 9.32 [ 1981 / 21259, 148 ins, 877 del, 956 sub ]
+%SER 57.71 [ 808 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_5.0
+%WER 10.25 [ 2178 / 21259, 132 ins, 1040 del, 1006 sub ]
+%SER 60.14 [ 842 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_-1.0
+%WER 7.35 [ 1563 / 21259, 438 ins, 254 del, 871 sub ]
+%SER 51.43 [ 720 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_-2.0
+%WER 7.84 [ 1666 / 21259, 584 ins, 195 del, 887 sub ]
+%SER 52.36 [ 733 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_-3.0
+%WER 8.98 [ 1910 / 21259, 812 ins, 151 del, 947 sub ]
+%SER 55.14 [ 772 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_-4.0
+%WER 10.19 [ 2166 / 21259, 1040 ins, 123 del, 1003 sub ]
+%SER 58.36 [ 817 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_-5.0
+%WER 11.77 [ 2502 / 21259, 1338 ins, 92 del, 1072 sub ]
+%SER 63.71 [ 892 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_0.0
+%WER 7.27 [ 1545 / 21259, 333 ins, 351 del, 861 sub ]
+%SER 51.79 [ 725 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_1.0
+%WER 7.42 [ 1577 / 21259, 251 ins, 468 del, 858 sub ]
+%SER 52.14 [ 730 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_2.0
+%WER 7.85 [ 1669 / 21259, 200 ins, 600 del, 869 sub ]
+%SER 53.36 [ 747 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_3.0
+%WER 8.57 [ 1821 / 21259, 165 ins, 754 del, 902 sub ]
+%SER 55.36 [ 775 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_4.0
+%WER 9.50 [ 2019 / 21259, 138 ins, 929 del, 952 sub ]
+%SER 58.50 [ 819 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_14_5.0
+%WER 10.45 [ 2221 / 21259, 131 ins, 1080 del, 1010 sub ]
+%SER 60.71 [ 850 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_-1.0
+%WER 7.37 [ 1567 / 21259, 422 ins, 260 del, 885 sub ]
+%SER 51.86 [ 726 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_-2.0
+%WER 7.84 [ 1667 / 21259, 571 ins, 193 del, 903 sub ]
+%SER 52.93 [ 741 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_-3.0
+%WER 8.99 [ 1912 / 21259, 801 ins, 152 del, 959 sub ]
+%SER 55.86 [ 782 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_-4.0
+%WER 10.32 [ 2194 / 21259, 1050 ins, 124 del, 1020 sub ]
+%SER 58.86 [ 824 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_-5.0
+%WER 11.90 [ 2529 / 21259, 1351 ins, 92 del, 1086 sub ]
+%SER 64.64 [ 905 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_0.0
+%WER 7.30 [ 1552 / 21259, 310 ins, 373 del, 869 sub ]
+%SER 52.29 [ 732 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_1.0
+%WER 7.48 [ 1591 / 21259, 238 ins, 488 del, 865 sub ]
+%SER 52.86 [ 740 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_2.0
+%WER 8.02 [ 1704 / 21259, 185 ins, 640 del, 879 sub ]
+%SER 54.14 [ 758 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_3.0
+%WER 8.75 [ 1860 / 21259, 152 ins, 794 del, 914 sub ]
+%SER 56.14 [ 786 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_4.0
+%WER 9.76 [ 2075 / 21259, 136 ins, 968 del, 971 sub ]
+%SER 59.64 [ 835 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_15_5.0
+%WER 10.49 [ 2231 / 21259, 128 ins, 1085 del, 1018 sub ]
+%SER 61.43 [ 860 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_-1.0
+%WER 7.30 [ 1551 / 21259, 397 ins, 268 del, 886 sub ]
+%SER 52.14 [ 730 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_-2.0
+%WER 7.87 [ 1674 / 21259, 565 ins, 200 del, 909 sub ]
+%SER 53.57 [ 750 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_-3.0
+%WER 9.02 [ 1918 / 21259, 795 ins, 151 del, 972 sub ]
+%SER 56.14 [ 786 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_-4.0
+%WER 10.36 [ 2203 / 21259, 1053 ins, 124 del, 1026 sub ]
+%SER 59.07 [ 827 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_-5.0
+%WER 12.01 [ 2553 / 21259, 1356 ins, 96 del, 1101 sub ]
+%SER 64.86 [ 908 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_0.0
+%WER 7.33 [ 1558 / 21259, 301 ins, 384 del, 873 sub ]
+%SER 52.36 [ 733 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_1.0
+%WER 7.52 [ 1599 / 21259, 221 ins, 510 del, 868 sub ]
+%SER 53.00 [ 742 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_2.0
+%WER 8.18 [ 1738 / 21259, 175 ins, 670 del, 893 sub ]
+%SER 54.57 [ 764 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_3.0
+%WER 8.94 [ 1901 / 21259, 147 ins, 831 del, 923 sub ]
+%SER 57.14 [ 800 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_4.0
+%WER 9.89 [ 2102 / 21259, 137 ins, 991 del, 974 sub ]
+%SER 60.14 [ 842 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_16_5.0
+%WER 10.51 [ 2234 / 21259, 128 ins, 1086 del, 1020 sub ]
+%SER 61.50 [ 861 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_-1.0
+%WER 7.36 [ 1564 / 21259, 395 ins, 281 del, 888 sub ]
+%SER 52.29 [ 732 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_-2.0
+%WER 7.91 [ 1681 / 21259, 560 ins, 206 del, 915 sub ]
+%SER 53.50 [ 749 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_-3.0
+%WER 8.99 [ 1912 / 21259, 778 ins, 154 del, 980 sub ]
+%SER 55.86 [ 782 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_-4.0
+%WER 10.38 [ 2207 / 21259, 1055 ins, 121 del, 1031 sub ]
+%SER 59.43 [ 832 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_-5.0
+%WER 12.02 [ 2556 / 21259, 1353 ins, 99 del, 1104 sub ]
+%SER 65.14 [ 912 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_0.0
+%WER 7.32 [ 1557 / 21259, 288 ins, 394 del, 875 sub ]
+%SER 52.36 [ 733 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_1.0
+%WER 7.62 [ 1620 / 21259, 209 ins, 533 del, 878 sub ]
+%SER 53.21 [ 745 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_2.0
+%WER 8.31 [ 1767 / 21259, 166 ins, 698 del, 903 sub ]
+%SER 54.86 [ 768 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_3.0
+%WER 9.09 [ 1933 / 21259, 142 ins, 858 del, 933 sub ]
+%SER 57.86 [ 810 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_4.0
+%WER 9.98 [ 2121 / 21259, 136 ins, 1002 del, 983 sub ]
+%SER 60.36 [ 845 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_17_5.0
+%WER 10.53 [ 2239 / 21259, 127 ins, 1087 del, 1025 sub ]
+%SER 61.64 [ 863 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_-1.0
+%WER 7.42 [ 1577 / 21259, 386 ins, 293 del, 898 sub ]
+%SER 52.50 [ 735 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_-2.0
+%WER 7.88 [ 1676 / 21259, 545 ins, 207 del, 924 sub ]
+%SER 53.86 [ 754 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_-3.0
+%WER 9.00 [ 1913 / 21259, 773 ins, 155 del, 985 sub ]
+%SER 56.36 [ 789 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_-4.0
+%WER 10.48 [ 2228 / 21259, 1061 ins, 119 del, 1048 sub ]
+%SER 60.43 [ 846 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_-5.0
+%WER 12.06 [ 2564 / 21259, 1351 ins, 101 del, 1112 sub ]
+%SER 65.57 [ 918 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_0.0
+%WER 7.36 [ 1565 / 21259, 275 ins, 410 del, 880 sub ]
+%SER 52.57 [ 736 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_1.0
+%WER 7.78 [ 1655 / 21259, 206 ins, 564 del, 885 sub ]
+%SER 53.93 [ 755 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_2.0
+%WER 8.42 [ 1790 / 21259, 160 ins, 726 del, 904 sub ]
+%SER 55.50 [ 777 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_3.0
+%WER 9.22 [ 1960 / 21259, 139 ins, 883 del, 938 sub ]
+%SER 58.21 [ 815 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_4.0
+%WER 10.03 [ 2133 / 21259, 135 ins, 1011 del, 987 sub ]
+%SER 60.57 [ 848 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_18_5.0
+%WER 10.55 [ 2243 / 21259, 126 ins, 1087 del, 1030 sub ]
+%SER 61.71 [ 864 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_-1.0
+%WER 7.55 [ 1604 / 21259, 380 ins, 306 del, 918 sub ]
+%SER 53.57 [ 750 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_-2.0
+%WER 7.98 [ 1696 / 21259, 535 ins, 220 del, 941 sub ]
+%SER 54.57 [ 764 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_-3.0
+%WER 9.15 [ 1946 / 21259, 778 ins, 155 del, 1013 sub ]
+%SER 57.21 [ 801 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_-4.0
+%WER 10.65 [ 2265 / 21259, 1067 ins, 123 del, 1075 sub ]
+%SER 61.21 [ 857 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_-5.0
+%WER 12.15 [ 2583 / 21259, 1347 ins, 101 del, 1135 sub ]
+%SER 66.00 [ 924 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_0.0
+%WER 7.54 [ 1603 / 21259, 261 ins, 434 del, 908 sub ]
+%SER 53.36 [ 747 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_1.0
+%WER 7.91 [ 1681 / 21259, 199 ins, 579 del, 903 sub ]
+%SER 54.29 [ 760 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_2.0
+%WER 8.63 [ 1835 / 21259, 160 ins, 749 del, 926 sub ]
+%SER 56.29 [ 788 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_3.0
+%WER 9.42 [ 2003 / 21259, 139 ins, 910 del, 954 sub ]
+%SER 59.14 [ 828 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_4.0
+%WER 10.10 [ 2147 / 21259, 135 ins, 1012 del, 1000 sub ]
+%SER 61.07 [ 855 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_19_5.0
+%WER 10.63 [ 2260 / 21259, 126 ins, 1086 del, 1048 sub ]
+%SER 62.29 [ 872 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_-1.0
+%WER 10.81 [ 2298 / 21259, 804 ins, 291 del, 1203 sub ]
+%SER 62.07 [ 869 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_-2.0
+%WER 10.90 [ 2317 / 21259, 825 ins, 280 del, 1212 sub ]
+%SER 62.14 [ 870 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_-3.0
+%WER 10.93 [ 2324 / 21259, 838 ins, 273 del, 1213 sub ]
+%SER 62.36 [ 873 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_-4.0
+%WER 11.07 [ 2353 / 21259, 863 ins, 264 del, 1226 sub ]
+%SER 63.00 [ 882 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_-5.0
+%WER 11.28 [ 2397 / 21259, 891 ins, 255 del, 1251 sub ]
+%SER 63.43 [ 888 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_0.0
+%WER 10.80 [ 2297 / 21259, 787 ins, 300 del, 1210 sub ]
+%SER 62.29 [ 872 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_1.0
+%WER 10.88 [ 2314 / 21259, 777 ins, 320 del, 1217 sub ]
+%SER 62.29 [ 872 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_2.0
+%WER 10.87 [ 2310 / 21259, 767 ins, 328 del, 1215 sub ]
+%SER 62.36 [ 873 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_3.0
+%WER 10.93 [ 2323 / 21259, 759 ins, 343 del, 1221 sub ]
+%SER 62.43 [ 874 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_4.0
+%WER 10.96 [ 2330 / 21259, 743 ins, 356 del, 1231 sub ]
+%SER 62.57 [ 876 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_1_5.0
+%WER 11.02 [ 2342 / 21259, 733 ins, 371 del, 1238 sub ]
+%SER 62.79 [ 879 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_-1.0
+%WER 7.55 [ 1605 / 21259, 360 ins, 316 del, 929 sub ]
+%SER 53.57 [ 750 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_-2.0
+%WER 8.08 [ 1718 / 21259, 531 ins, 229 del, 958 sub ]
+%SER 55.14 [ 772 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_-3.0
+%WER 9.15 [ 1945 / 21259, 769 ins, 157 del, 1019 sub ]
+%SER 57.57 [ 806 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_-4.0
+%WER 10.71 [ 2277 / 21259, 1068 ins, 123 del, 1086 sub ]
+%SER 61.86 [ 866 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_-5.0
+%WER 12.17 [ 2588 / 21259, 1346 ins, 101 del, 1141 sub ]
+%SER 66.29 [ 928 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_0.0
+%WER 7.64 [ 1625 / 21259, 256 ins, 449 del, 920 sub ]
+%SER 54.00 [ 756 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_1.0
+%WER 8.01 [ 1702 / 21259, 193 ins, 595 del, 914 sub ]
+%SER 54.79 [ 767 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_2.0
+%WER 8.73 [ 1855 / 21259, 159 ins, 762 del, 934 sub ]
+%SER 56.79 [ 795 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_3.0
+%WER 9.49 [ 2018 / 21259, 140 ins, 916 del, 962 sub ]
+%SER 59.43 [ 832 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_4.0
+%WER 10.16 [ 2160 / 21259, 135 ins, 1016 del, 1009 sub ]
+%SER 61.29 [ 858 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_20_5.0
+%WER 10.64 [ 2262 / 21259, 126 ins, 1084 del, 1052 sub ]
+%SER 62.43 [ 874 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_-1.0
+%WER 10.52 [ 2237 / 21259, 777 ins, 285 del, 1175 sub ]
+%SER 61.07 [ 855 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_-2.0
+%WER 10.62 [ 2257 / 21259, 816 ins, 263 del, 1178 sub ]
+%SER 61.29 [ 858 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_-3.0
+%WER 10.74 [ 2283 / 21259, 849 ins, 250 del, 1184 sub ]
+%SER 61.00 [ 854 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_-4.0
+%WER 10.81 [ 2299 / 21259, 880 ins, 227 del, 1192 sub ]
+%SER 61.79 [ 865 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_-5.0
+%WER 11.07 [ 2354 / 21259, 934 ins, 206 del, 1214 sub ]
+%SER 62.43 [ 874 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_0.0
+%WER 10.48 [ 2227 / 21259, 756 ins, 297 del, 1174 sub ]
+%SER 61.14 [ 856 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_1.0
+%WER 10.42 [ 2216 / 21259, 733 ins, 314 del, 1169 sub ]
+%SER 61.07 [ 855 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_2.0
+%WER 10.43 [ 2218 / 21259, 708 ins, 337 del, 1173 sub ]
+%SER 61.21 [ 857 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_3.0
+%WER 10.46 [ 2224 / 21259, 681 ins, 366 del, 1177 sub ]
+%SER 61.36 [ 859 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_4.0
+%WER 10.51 [ 2235 / 21259, 654 ins, 390 del, 1191 sub ]
+%SER 61.64 [ 863 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_2_5.0
+%WER 10.61 [ 2255 / 21259, 633 ins, 415 del, 1207 sub ]
+%SER 61.71 [ 864 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_-1.0
+%WER 10.10 [ 2147 / 21259, 756 ins, 272 del, 1119 sub ]
+%SER 59.93 [ 839 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_-2.0
+%WER 10.23 [ 2174 / 21259, 812 ins, 242 del, 1120 sub ]
+%SER 59.71 [ 836 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_-3.0
+%WER 10.37 [ 2205 / 21259, 851 ins, 217 del, 1137 sub ]
+%SER 59.93 [ 839 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_-4.0
+%WER 10.62 [ 2258 / 21259, 910 ins, 194 del, 1154 sub ]
+%SER 60.79 [ 851 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_-5.0
+%WER 11.03 [ 2345 / 21259, 983 ins, 175 del, 1187 sub ]
+%SER 61.57 [ 862 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_0.0
+%WER 10.03 [ 2133 / 21259, 713 ins, 294 del, 1126 sub ]
+%SER 59.93 [ 839 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_1.0
+%WER 9.97 [ 2120 / 21259, 678 ins, 318 del, 1124 sub ]
+%SER 59.86 [ 838 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_2.0
+%WER 10.07 [ 2140 / 21259, 645 ins, 360 del, 1135 sub ]
+%SER 59.86 [ 838 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_3.0
+%WER 10.05 [ 2137 / 21259, 603 ins, 394 del, 1140 sub ]
+%SER 59.71 [ 836 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_4.0
+%WER 10.23 [ 2174 / 21259, 573 ins, 436 del, 1165 sub ]
+%SER 59.86 [ 838 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_3_5.0
+%WER 10.33 [ 2196 / 21259, 542 ins, 476 del, 1178 sub ]
+%SER 60.00 [ 840 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_-1.0
+%WER 9.59 [ 2039 / 21259, 719 ins, 259 del, 1061 sub ]
+%SER 58.43 [ 818 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_-2.0
+%WER 9.81 [ 2085 / 21259, 791 ins, 222 del, 1072 sub ]
+%SER 58.64 [ 821 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_-3.0
+%WER 10.04 [ 2135 / 21259, 857 ins, 193 del, 1085 sub ]
+%SER 58.79 [ 823 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_-4.0
+%WER 10.38 [ 2207 / 21259, 932 ins, 162 del, 1113 sub ]
+%SER 59.57 [ 834 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_-5.0
+%WER 10.82 [ 2301 / 21259, 1016 ins, 141 del, 1144 sub ]
+%SER 60.79 [ 851 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_0.0
+%WER 9.61 [ 2042 / 21259, 677 ins, 295 del, 1070 sub ]
+%SER 58.50 [ 819 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_1.0
+%WER 9.58 [ 2036 / 21259, 618 ins, 342 del, 1076 sub ]
+%SER 58.21 [ 815 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_2.0
+%WER 9.61 [ 2043 / 21259, 581 ins, 376 del, 1086 sub ]
+%SER 58.21 [ 815 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_3.0
+%WER 9.68 [ 2057 / 21259, 532 ins, 427 del, 1098 sub ]
+%SER 58.50 [ 819 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_4.0
+%WER 9.75 [ 2072 / 21259, 488 ins, 471 del, 1113 sub ]
+%SER 58.50 [ 819 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_4_5.0
+%WER 9.90 [ 2104 / 21259, 456 ins, 518 del, 1130 sub ]
+%SER 58.50 [ 819 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_-1.0
+%WER 9.24 [ 1965 / 21259, 695 ins, 246 del, 1024 sub ]
+%SER 57.21 [ 801 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_-2.0
+%WER 9.49 [ 2017 / 21259, 775 ins, 199 del, 1043 sub ]
+%SER 57.29 [ 802 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_-3.0
+%WER 9.77 [ 2077 / 21259, 857 ins, 169 del, 1051 sub ]
+%SER 57.57 [ 806 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_-4.0
+%WER 10.17 [ 2161 / 21259, 947 ins, 142 del, 1072 sub ]
+%SER 59.07 [ 827 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_-5.0
+%WER 10.82 [ 2301 / 21259, 1058 ins, 128 del, 1115 sub ]
+%SER 60.29 [ 844 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_0.0
+%WER 9.17 [ 1949 / 21259, 624 ins, 301 del, 1024 sub ]
+%SER 57.00 [ 798 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_1.0
+%WER 9.11 [ 1936 / 21259, 563 ins, 342 del, 1031 sub ]
+%SER 56.86 [ 796 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_2.0
+%WER 9.13 [ 1942 / 21259, 511 ins, 389 del, 1042 sub ]
+%SER 57.00 [ 798 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_3.0
+%WER 9.24 [ 1965 / 21259, 464 ins, 447 del, 1054 sub ]
+%SER 56.86 [ 796 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_4.0
+%WER 9.44 [ 2007 / 21259, 425 ins, 508 del, 1074 sub ]
+%SER 57.43 [ 804 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_5_5.0
+%WER 9.66 [ 2054 / 21259, 397 ins, 563 del, 1094 sub ]
+%SER 58.14 [ 814 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_-1.0
+%WER 8.85 [ 1881 / 21259, 658 ins, 233 del, 990 sub ]
+%SER 55.57 [ 778 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_-2.0
+%WER 9.26 [ 1969 / 21259, 767 ins, 190 del, 1012 sub ]
+%SER 56.29 [ 788 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_-3.0
+%WER 9.58 [ 2036 / 21259, 861 ins, 160 del, 1015 sub ]
+%SER 57.00 [ 798 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_-4.0
+%WER 10.16 [ 2160 / 21259, 973 ins, 133 del, 1054 sub ]
+%SER 58.43 [ 818 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_-5.0
+%WER 10.82 [ 2301 / 21259, 1089 ins, 120 del, 1092 sub ]
+%SER 59.71 [ 836 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_0.0
+%WER 8.74 [ 1857 / 21259, 578 ins, 300 del, 979 sub ]
+%SER 55.71 [ 780 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_1.0
+%WER 8.63 [ 1834 / 21259, 506 ins, 347 del, 981 sub ]
+%SER 55.07 [ 771 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_2.0
+%WER 8.74 [ 1857 / 21259, 459 ins, 403 del, 995 sub ]
+%SER 55.43 [ 776 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_3.0
+%WER 8.94 [ 1900 / 21259, 411 ins, 476 del, 1013 sub ]
+%SER 55.93 [ 783 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_4.0
+%WER 9.19 [ 1954 / 21259, 368 ins, 546 del, 1040 sub ]
+%SER 56.57 [ 792 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_6_5.0
+%WER 9.41 [ 2000 / 21259, 319 ins, 613 del, 1068 sub ]
+%SER 56.86 [ 796 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_-1.0
+%WER 8.54 [ 1815 / 21259, 619 ins, 239 del, 957 sub ]
+%SER 54.29 [ 760 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_-2.0
+%WER 8.90 [ 1893 / 21259, 739 ins, 193 del, 961 sub ]
+%SER 55.14 [ 772 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_-3.0
+%WER 9.45 [ 2009 / 21259, 854 ins, 158 del, 997 sub ]
+%SER 56.21 [ 787 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_-4.0
+%WER 10.11 [ 2150 / 21259, 985 ins, 126 del, 1039 sub ]
+%SER 57.71 [ 808 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_-5.0
+%WER 10.88 [ 2314 / 21259, 1127 ins, 112 del, 1075 sub ]
+%SER 59.71 [ 836 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_0.0
+%WER 8.32 [ 1768 / 21259, 532 ins, 287 del, 949 sub ]
+%SER 53.93 [ 755 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_1.0
+%WER 8.34 [ 1772 / 21259, 470 ins, 357 del, 945 sub ]
+%SER 54.07 [ 757 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_2.0
+%WER 8.39 [ 1784 / 21259, 407 ins, 429 del, 948 sub ]
+%SER 54.36 [ 761 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_3.0
+%WER 8.65 [ 1838 / 21259, 355 ins, 508 del, 975 sub ]
+%SER 54.71 [ 766 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_4.0
+%WER 8.88 [ 1888 / 21259, 307 ins, 574 del, 1007 sub ]
+%SER 55.64 [ 779 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_7_5.0
+%WER 9.21 [ 1958 / 21259, 268 ins, 657 del, 1033 sub ]
+%SER 56.14 [ 786 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_-1.0
+%WER 8.21 [ 1746 / 21259, 588 ins, 237 del, 921 sub ]
+%SER 53.43 [ 748 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_-2.0
+%WER 8.66 [ 1842 / 21259, 718 ins, 193 del, 931 sub ]
+%SER 54.36 [ 761 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_-3.0
+%WER 9.29 [ 1975 / 21259, 852 ins, 151 del, 972 sub ]
+%SER 56.14 [ 786 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_-4.0
+%WER 10.04 [ 2134 / 21259, 996 ins, 125 del, 1013 sub ]
+%SER 57.86 [ 810 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_-5.0
+%WER 10.96 [ 2330 / 21259, 1170 ins, 104 del, 1056 sub ]
+%SER 60.00 [ 840 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_0.0
+%WER 7.94 [ 1689 / 21259, 492 ins, 292 del, 905 sub ]
+%SER 53.21 [ 745 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_1.0
+%WER 8.02 [ 1706 / 21259, 426 ins, 375 del, 905 sub ]
+%SER 53.50 [ 749 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_2.0
+%WER 8.05 [ 1711 / 21259, 352 ins, 443 del, 916 sub ]
+%SER 53.57 [ 750 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_3.0
+%WER 8.40 [ 1785 / 21259, 303 ins, 537 del, 945 sub ]
+%SER 54.29 [ 760 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_4.0
+%WER 8.66 [ 1842 / 21259, 263 ins, 609 del, 970 sub ]
+%SER 54.86 [ 768 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_8_5.0
+%WER 9.23 [ 1962 / 21259, 231 ins, 720 del, 1011 sub ]
+%SER 55.93 [ 783 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_-1.0
+%WER 7.90 [ 1679 / 21259, 557 ins, 237 del, 885 sub ]
+%SER 52.79 [ 739 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_-2.0
+%WER 8.53 [ 1813 / 21259, 698 ins, 189 del, 926 sub ]
+%SER 54.21 [ 759 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_-3.0
+%WER 9.12 [ 1938 / 21259, 829 ins, 150 del, 959 sub ]
+%SER 55.71 [ 780 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_-4.0
+%WER 10.06 [ 2138 / 21259, 1008 ins, 122 del, 1008 sub ]
+%SER 57.79 [ 809 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_-5.0
+%WER 11.13 [ 2366 / 21259, 1207 ins, 100 del, 1059 sub ]
+%SER 60.93 [ 853 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_0.0
+%WER 7.76 [ 1649 / 21259, 464 ins, 297 del, 888 sub ]
+%SER 52.86 [ 740 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_1.0
+%WER 7.72 [ 1641 / 21259, 378 ins, 382 del, 881 sub ]
+%SER 52.93 [ 741 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_2.0
+%WER 7.89 [ 1677 / 21259, 312 ins, 468 del, 897 sub ]
+%SER 53.50 [ 749 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_3.0
+%WER 8.24 [ 1752 / 21259, 271 ins, 556 del, 925 sub ]
+%SER 53.79 [ 753 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_4.0
+%WER 8.77 [ 1865 / 21259, 234 ins, 665 del, 966 sub ]
+%SER 55.21 [ 773 / 1400 ]
+./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_9_5.0
+%WER 9.38 [ 1994 / 21259, 205 ins, 787 del, 1002 sub ]
+%SER 57.29 [ 802 / 1400 ]
+score confidence and timing with sclite
+Decoding done.
+
+-------------------------------------
+%WER 7.27 [ 1545 / 21259, 343 ins, 335 del, 867 sub ] ./exp/LIP-RTVE/100fps/speaker-dependent/audio/nnet2_hl2_dim2000-400/decode_test/wer_13_0.0
+-------------------------------------
+
