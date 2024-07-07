@@ -10,7 +10,7 @@ class AVSRDataset(Dataset):
     """Dataset to load different databases for audio- and video-only systems, as well as audio-visual ones.
     """
 
-    def __init__(self, args, dataset_path, filter_spkr_ids=['all-spkrs'], is_training=True):
+    def __init__(self, args, dataset_path, filter_spkr_ids=['all-spkrs'], filter_by_gender=['all-genders'], filter_by_age=['all-ages'], is_training=True):
         """__init__.
 
         Args:
@@ -30,6 +30,14 @@ class AVSRDataset(Dataset):
         if 'all-spkrs' not in filter_spkr_ids:
             self.samples['spkrID'] = self.samples.apply(lambda x: x['sampleID'][:-x['delimiter']], axis=1)
             self.samples = self.samples[self.samples['spkrID'].isin(filter_spkr_ids)]
+
+        # -- filtering by gender and age for a case study
+        if 'all-genders' not in filter_by_gender:
+            self.samples = self.samples[self.samples['gender'].isin(filter_by_gender)]
+
+        if 'all-ages' not in filter_by_age:
+            self.samples = self.samples[(self.samples['ages'] >= filter_by_age[0]) & (self.samples['ages'] <= filter_by_age[1])]
+
 
     def __len__(self):
         return len(self.samples)

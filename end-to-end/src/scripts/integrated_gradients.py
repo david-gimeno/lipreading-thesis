@@ -40,8 +40,8 @@ class ModelAdaptor(nn.Module):
         return torch.mean(torch.mean(enc, axis=-1), axis=-1)
 
 def integrated_gradients(model, eval_sample):
-    e2e.eval()
-    e2e.zero_grad()
+    model.eval()
+    model.zero_grad()
 
     keys_of_interest = ['speech'] # , 'speech_lengths', 'text', 'text_lengths']
     eval_sample = {k: v.to(device=config.device, non_blocking=True) if hasattr(v, 'to') else v for k, v in eval_sample.items()}
@@ -139,8 +139,11 @@ if __name__ == "__main__":
     # -- loading the AVSR end-to-end system from a checkpoint
     load_e2e(e2e, ['entire-e2e'], args.load_checkpoint, config)
 
+    # -- wrapping model adaptor
+    model = ModelAdaptor(e2e)
+
     # -- defining Integrated Gradients
-    ig = IntegratedGradients(e2e)
+    ig = IntegratedGradients(model)
 
     # -- creating dataloaders
     eval_loader = get_dataloader(config, dataset_path=args.dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
@@ -151,5 +154,5 @@ if __name__ == "__main__":
     # -- create output directory
     os.makedirs(args.output_dir, exist_ok=True)
 
-    attributions = integrated_gradients(ModelAdaptor(e2e), eval_sample)
+    attributions = integrated_gradients(model, eval_sample)
 

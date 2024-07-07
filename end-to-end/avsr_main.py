@@ -109,6 +109,8 @@ if __name__ == "__main__":
     parser.add_argument("--validation-dataset", default="", type=str, help="Path to where the validation dataset split is")
     parser.add_argument("--test-dataset", default="", type=str, help="Path to where the test dataset split is")
     parser.add_argument("--filter-spkr-ids", nargs='+', default=["all-spkrs"], type=str, help="Choose the speaker's data you want to use")
+    parser.add_argument("--filter-by-gender", nargs='+', default=["all-genders"], type=str, help="Choose the speaker's data you want to use based on gender")
+    parser.add_argument("--filter-by-age", nargs='+', default=["all-ages"], type=str, help="Provide the minimum first and then the maxixum age you are interested in")
 
     parser.add_argument("--mode", default="both", type=str, help="Choose: 'training', 'inference' or 'both'")
     parser.add_argument("--mask", default="none", type=str, help="Choose: 'audio', 'video' or 'none'")
@@ -190,9 +192,9 @@ if __name__ == "__main__":
         freeze_e2e(e2e, args.freeze_modules, config)
 
         # -- -- creating dataloaders
-        train_loader = get_dataloader(config, dataset_path=args.training_dataset, audio_transforms=train_audio_transforms, video_transforms=train_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=True)
-        val_loader = get_dataloader(config, dataset_path=args.validation_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
-        test_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
+        train_loader = get_dataloader(config, dataset_path=args.training_dataset, audio_transforms=train_audio_transforms, video_transforms=train_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, filter_by_gender=args.filter_by_gender, filter_by_age=args.filter_by_age, is_training=True)
+        val_loader = get_dataloader(config, dataset_path=args.validation_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, filter_by_gender=args.filter_by_gender, filter_by_age=args.filter_by_age, is_training=False)
+        test_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, filter_by_gender=args.filter_by_gender, filter_by_age=args.filter_by_age, is_training=False)
 
         # -- -- optimizer and scheduler
         optimizer, scheduler = set_optimizer(config, e2e, train_loader)
@@ -231,6 +233,6 @@ if __name__ == "__main__":
         speech2text = build_speech2text(args, config)
 
         # -- -- creating validation & test dataloaders
-        eval_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, is_training=False)
+        eval_loader = get_dataloader(config, dataset_path=args.test_dataset, audio_transforms=eval_audio_transforms, video_transforms=eval_video_transforms, tokenizer=tokenizer, converter=converter, filter_spkr_ids=args.filter_spkr_ids, filter_by_gender=args.filter_by_gender, filter_by_age=args.filter_by_age, is_training=False)
         inference(args.output_dir, speech2text, eval_loader, args.output_name)
 
