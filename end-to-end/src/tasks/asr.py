@@ -29,6 +29,11 @@ from espnet2.asr.decoder.transformer_decoder import (
 
 from src.decoder.transformer.decoder import TransformerDecoder
 
+from src.encoder.sim_t.conformer.encoder import ConformerEncoderSimT
+from src.encoder.sim_t.my_branchformer.encoder import MyBranchformerEncoderSimT
+from src.decoder.sim_t.transformer.decoder import TransformerDecoderSimT
+from src.decoder.sim_t.mlm_decoder import MLMDecoderSimT
+
 from espnet2.asr.decoder.whisper_decoder import OpenAIWhisperDecoder
 from espnet2.asr.encoder.abs_encoder import AbsEncoder
 from espnet2.asr.encoder.branchformer_encoder import BranchformerEncoder
@@ -166,6 +171,8 @@ encoder_choices = ClassChoices(
         branchformer=BranchformerEncoder,
         e_branchformer=EBranchformerEncoder,
         my_branchformer=MyBranchformerEncoder,
+        simt_conformer=ConformerEncoderSimT,
+        simt_my_branchformer=MyBranchformerEncoderSimT,
     ),
     type_check=AbsEncoder,
     default="branchformer",
@@ -193,6 +200,8 @@ decoder_choices = ClassChoices(
         whisper=OpenAIWhisperDecoder,
         hugging_face_transformers=HuggingFaceTransformersDecoder,
         s4=S4Decoder,
+        simt_transformer=TransformerDecoderSimT,
+        simt_mlm=MLMDecoderSimT
     ),
     type_check=AbsDecoder,
     default=None,

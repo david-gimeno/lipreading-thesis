@@ -30,6 +30,9 @@ from espnet.nets.pytorch_backend.transformer.subsampling import (
 from espnet2.asr.encoder.conformer_encoder import ConformerEncoder
 from src.encoder.my_branchformer.encoder import MyBranchformerEncoder
 
+from src.encoder.sim_t.conformer.encoder import ConformerEncoderSimT
+from src.encoder.sim_t.my_e_branchformer.encoder import MyEBranchformerEncoderSimT
+
 from src.audiovisual_fusion.audiovisual_fusion_abs_module import AudioVisualFusionAbsModule
 
 class ConventionalEncoder(AudioVisualAbsEncoder):
@@ -221,5 +224,9 @@ class ConventionalEncoder(AudioVisualAbsEncoder):
             return ConformerEncoder
         elif encoder_class_type == "my_branchformer":
             return MyBranchformerEncoder
+        elif encoder_class_type == "simt_conformer":
+            return ConformerEncoderSimT
+        elif encoder_class_type == "simt_my_e_branchformer":
+            return MyEBranchformerEncoder
         else:
             raise ValueError("unknown encoder_class_type: " + encoder_class_type)

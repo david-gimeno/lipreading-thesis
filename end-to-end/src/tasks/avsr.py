@@ -57,8 +57,11 @@ from espnet2.asr.decoder.transformer_decoder import (
     # TransformerDecoder,
 )
 from src.decoder.transformer.decoder import TransformerDecoder
-from espnet2.asr.decoder.whisper_decoder import OpenAIWhisperDecoder
 
+from src.decoder.sim_t.transformer.decoder import TransformerDecoderSimT
+from src.decoder.sim_t.mlm_decoder import MLMDecoderSimT
+
+from espnet2.asr.decoder.whisper_decoder import OpenAIWhisperDecoder
 from src.models.avsr_espnet_model import ESPnetAVSRModel
 from src.models.avsr_maskctc_model import AVSRMaskCTCModel
 
@@ -194,6 +197,8 @@ decoder_choices = ClassChoices(
         whisper=OpenAIWhisperDecoder,
         hugging_face_transformers=HuggingFaceTransformersDecoder,
         s4=S4Decoder,
+        simt_transformer=TransformerDecoderSimT,
+        simt_mlm=MLMDecoderSimT,
     ),
     type_check=AbsDecoder,
     default=None,
