@@ -64,6 +64,8 @@ class AdaptiveAudioVisualFusion(AudioVisualFusionAbsModule):
         activation = get_activation(activation_type)
         if audiovisual_layer_type == "upsampling_positionwise":
             audiovisual_layer_class = PositionwiseFeedForward
+        elif audiovisual_layer_type == "upsampling_audiovisual_positionwise":
+            audiovisual_layer_class = AVPositionwiseFeedForward
         else:
             raise ValueError("Support only upsampling positionwise feed forward fusion.")
 
@@ -209,3 +211,25 @@ class AdaptiveAudioVisualFusion(AudioVisualFusionAbsModule):
         audiovisual_olens = audiovisual_masks.squeeze(1).sum(1)
 
         return audiovisual, audiovisual_olens
+
+class AVPositionwiseFeedForward(torch.nn.Module):
+    """Audio-Visual Early Fusion Positionwise feed forward layer.
+
+    Args:
+        idim (int): Input dimenstion.
+        hidden_units (int): The number of hidden units.
+        dropout_rate (float): Dropout rate.
+
+    """
+
+    def __init__(self, idim, hidden_units, dropout_rate, activation=torch.nn.ReLU()):
+        """Construct an PositionwiseFeedForward object."""
+        super(AVPositionwiseFeedForward, self).__init__()
+        self.w_1 = torch.nn.Linear(idim, hidden_units)
+        self.w_2 = torch.nn.Linear(hidden_units, idim // 2)
+        self.dropout = torch.nn.Dropout(dropout_rate)
+        self.activation = activation
+
+    def forward(self, x):
+        """Forward function."""
+        return self.w_2(self.dropout(self.activation(self.w_1(x))))

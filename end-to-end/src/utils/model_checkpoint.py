@@ -124,7 +124,7 @@ def freeze_e2e(e2e, modules, config):
                 else:
                     raise RuntimeError("The end-to-end model does not have a CTC-based decoding branch!")
     else:
-        if config.encoder_conf['use_adapters'] or config.decoder_conf['use_adapters']:
+        if config.encoder_conf.get('use_adapters', False) or config.decoder_conf.get('use_adapters', False):
             print("Freezing every layer in the model except for the injected adapter layers")
             for name, param in e2e.named_parameters():
                 if "adapter" not in name: # and ("ctc" not in name):

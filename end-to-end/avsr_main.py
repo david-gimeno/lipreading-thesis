@@ -26,7 +26,7 @@ from torchvision import transforms
 
 def training(e2e, train_loader, optimizer, scheduler, accum_grad, scaler=None):
     e2e.train()
-    if config.encoder_conf['use_adapters'] or config.decoder_conf['use_adapters']:
+    if config.encoder_conf.get('use_adapters', False) or config.decoder_conf.get('use_adapters', False):
         e2e.apply(set_eval_mode_except_adapters)
 
     # -- training
@@ -44,6 +44,7 @@ def training(e2e, train_loader, optimizer, scheduler, accum_grad, scaler=None):
         # -- update
         if ((batch_idx+1) % accum_grad == 0) or (batch_idx+1 == len(train_loader)):
             optimizer.step()
+
             if scheduler is not None:
                 scheduler.step()
             optimizer.zero_grad()
